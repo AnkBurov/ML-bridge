@@ -1,0 +1,14 @@
+zuul:
+    routes:
+        mock-ok:
+            path: /ml/mock-ok/**
+            url: http://localhost:8057/mock-ok
+        mock-ok-get:
+            path: /ml/mock-ok-get/**
+            url: http://localhost:8057/mock-ok-get
+        mock-error:
+            path: /ml/mock-error/**
+            url: http://localhost:8057/mock-error
+        mock-nonexisting-server:
+            path: /ml/mock-nonexisting-server/**
+            url: http://localhost:8050/mock-nonexisting-server
