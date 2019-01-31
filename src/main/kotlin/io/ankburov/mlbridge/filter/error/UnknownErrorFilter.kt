@@ -32,7 +32,6 @@ class UnknownErrorFilter(private val objectMapper: ObjectMapper) : ZuulFilter(){
     }
 
     override fun shouldFilter(): Boolean {
-//        return with(RequestContext.getCurrentContext()) { errorRaised() }
         return RequestContext.getCurrentContext().errorRaised()
     }
 

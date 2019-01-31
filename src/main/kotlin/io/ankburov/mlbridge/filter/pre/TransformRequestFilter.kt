@@ -33,8 +33,8 @@ class TransformRequestFilter(private val objectMapper: ObjectMapper) : ZuulFilte
                 ?: throw IllegalArgumentException("CorrelationId must be present")
             this[CORRELATION_ID] = correlationId
 
-            val dataNode = jsonTree.getDataNode()
-                ?.takeUnless { it.isNull } ?: throw IllegalArgumentException("Data must be present")
+            val dataNode = jsonTree.getDataNode()?.takeUnless { it.isNull }
+                ?: throw IllegalArgumentException("Data must be present")
             val data = objectMapper.writeValueAsBytes(dataNode)
 
             request = request.changeRequestBody(data) // update the request body
