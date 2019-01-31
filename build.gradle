@@ -1,15 +1,19 @@
 buildscript {
     ext {
         kotlinVersion = '1.3.11'
-        springBootVersion = '1.5.19.RELEASE'
+        springBootVersion = '2.0.8.RELEASE'
     }
     repositories {
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+        classpath "gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.21.0"
     }
 }
 
@@ -20,6 +24,8 @@ apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: "com.palantir.docker"
+apply plugin: "com.palantir.docker-run"
 
 repositories {
     mavenCentral()
@@ -27,7 +33,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Edgware.SR5"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Finchley.SR2"
     }
 }
 
@@ -35,12 +41,12 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     compile("org.jetbrains.kotlin:kotlin-reflect")
 
-    compile('org.springframework.cloud:spring-cloud-starter-zuul')
+    compile('org.springframework.cloud:spring-cloud-starter-netflix-zuul')
     compile('org.springframework.cloud:spring-cloud-starter-consul-all')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-test')
-    
-    compile('ch.sbb:springboot-graceful-shutdown:1.1.1')
+
+    compile('ch.sbb:springboot-graceful-shutdown:2.0.1')
 
     testCompile("org.springframework.cloud:spring-cloud-starter-contract-stub-runner"){
         exclude group: "org.springframework.boot", module: "spring-boot-starter-web"
@@ -53,4 +59,24 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+jar {
+    archiveName = 'ml-bridge.jar'
+}
+
+docker {
+    name 'ml-bridge:SNAPSHOT'
+    files 'build/libs/ml-bridge.jar'
+}
+
+dockerRun {
+    name 'ml-bridge'
+    image 'ml-bridge:SNAPSHOT'
+    ports '8080:8080', '8001:8001'
+    env ('SPRING_CLOUD_CONSUL_ENABLED': 'false',
+            'SPRING_CLOUD_BUS_ENABLED': 'false',
+            'SPRING_CLOUD_CONSUL_DISCOVERY_ENABLED': 'false',
+            'SPRING_CLOUD_CONSUL_CONFIG_ENABLED': 'false',
+            'ZUUL_ROUTES_GOOGLE': '/proxy/google/**=https://google.com')
 }
