@@ -6,6 +6,7 @@ import io.ankburov.mlbridge.utils.isMethod
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import java.io.InputStreamReader
+import java.util.zip.GZIPInputStream
 
 /**
  * Extract the body of a response from a disposable input stream to responseBody which can be read many times
@@ -23,7 +24,9 @@ class ExtractResponseBodyFilter : AbstractPostFilter() {
 
     override fun run(): Any {
         return RequestContext.getCurrentContext().apply {
-            val readText = responseDataStream?.reader()?.use(InputStreamReader::readText)
+            val readText = (if (responseGZipped) GZIPInputStream(responseDataStream) else responseDataStream)
+                ?.reader()
+                ?.use(InputStreamReader::readText)
             if (!readText.isNullOrBlank()) {
                 responseBody = readText
             }
