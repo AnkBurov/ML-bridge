@@ -26,7 +26,9 @@ import org.springframework.test.context.junit4.SpringRunner
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner::class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    properties = ["spring.cloud.consul.enabled=false", "spring.cloud.bus.enabled=false",
+        "spring.cloud.consul.discovery.enabled=false", "spring.cloud.consul.config.enabled=false"])
 @AutoConfigureWireMock(port = 8057)
 class ApplicationTest {
 

@@ -1,15 +1,16 @@
 package io.ankburov.mlbridge.filter.error
 
-import com.netflix.zuul.ZuulFilter
 import com.netflix.zuul.context.RequestContext
 import io.ankburov.mlbridge.utils.*
 import io.ankburov.mlbridge.utils.Constants.CORRELATION_ID
-import io.ankburov.mlbridge.utils.Constants.ERROR
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
 
+/**
+ * Fail business operation
+ */
 @Component
-class FailBusinessOperationFilter : ZuulFilter(){
+class FailBusinessOperationFilter : AbstractErrorFilter(){
 
     private val log = loggerFor(javaClass)
 
@@ -26,8 +27,6 @@ class FailBusinessOperationFilter : ZuulFilter(){
             errorRaised() && this.containsKey("BusinessOperationStarted")
         }
     }
-
-    override fun filterType(): String = ERROR
 
     override fun filterOrder(): Int = -15
 }

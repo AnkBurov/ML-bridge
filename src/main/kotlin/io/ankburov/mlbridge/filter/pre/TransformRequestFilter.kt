@@ -1,10 +1,8 @@
 package io.ankburov.mlbridge.filter.pre
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.netflix.zuul.ZuulFilter
 import com.netflix.zuul.context.RequestContext
 import io.ankburov.mlbridge.utils.Constants.CORRELATION_ID
-import io.ankburov.mlbridge.utils.Constants.PRE
 import io.ankburov.mlbridge.utils.getCorrelationId
 import io.ankburov.mlbridge.utils.getDataNode
 import io.ankburov.mlbridge.utils.isMethod
@@ -13,13 +11,14 @@ import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import javax.servlet.http.HttpServletRequest
 
+/**
+ * Extract from a canonical request model correlation id and data, and set data as a request body
+ */
 @Component
-class TransformRequestFilter(private val objectMapper: ObjectMapper) : ZuulFilter() {
+class TransformRequestFilter(private val objectMapper: ObjectMapper) : AbstractPreFilter() {
     override fun shouldFilter(): Boolean {
         return RequestContext.getCurrentContext().request.isMethod(HttpMethod.POST)
     }
-
-    override fun filterType(): String = PRE
 
     override fun filterOrder(): Int = Int.MIN_VALUE
 

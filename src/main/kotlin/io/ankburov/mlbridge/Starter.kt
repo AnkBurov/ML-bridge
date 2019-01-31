@@ -1,6 +1,6 @@
 package io.ankburov.mlbridge
 
-import org.springframework.boot.SpringApplication
+import ch.sbb.esta.openshift.gracefullshutdown.GracefulshutdownSpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy
@@ -13,5 +13,5 @@ class Starter {
 }
 
 fun main(args: Array<String>) {
-    SpringApplication.run(Starter::class.java, *args)
+    GracefulshutdownSpringApplication.run(Starter::class.java, *args)
 }

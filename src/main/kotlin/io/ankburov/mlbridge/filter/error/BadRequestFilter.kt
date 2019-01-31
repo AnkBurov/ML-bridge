@@ -1,18 +1,19 @@
 package io.ankburov.mlbridge.filter.error
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.netflix.zuul.ZuulFilter
 import com.netflix.zuul.context.RequestContext
 import io.ankburov.mlbridge.utils.*
 import io.ankburov.mlbridge.utils.Constants.CORRELATION_ID
-import io.ankburov.mlbridge.utils.Constants.ERROR
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.apache.http.entity.ContentType.APPLICATION_JSON
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 
+/**
+ * Catch bad request errors, transform to a canonical error representation and put out the error state
+ */
 @Component
-class BadRequestFilter(private val objectMapper: ObjectMapper) : ZuulFilter(){
+class BadRequestFilter(private val objectMapper: ObjectMapper) : AbstractErrorFilter(){
 
     private val log = loggerFor(javaClass)
 
@@ -36,8 +37,6 @@ class BadRequestFilter(private val objectMapper: ObjectMapper) : ZuulFilter(){
             errorRaised() && ExceptionUtils.getRootCause(throwable) is IllegalArgumentException
         }
     }
-
-    override fun filterType(): String = ERROR
 
     override fun filterOrder(): Int = -10
 }

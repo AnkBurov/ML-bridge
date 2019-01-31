@@ -36,9 +36,11 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-reflect")
 
     compile('org.springframework.cloud:spring-cloud-starter-zuul')
+    compile('org.springframework.cloud:spring-cloud-starter-consul-all')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-test')
-    compile('org.springframework.cloud:spring-cloud-starter-consul-all')
+    
+    compile('ch.sbb:springboot-graceful-shutdown:1.1.1')
 
     testCompile("org.springframework.cloud:spring-cloud-starter-contract-stub-runner"){
         exclude group: "org.springframework.boot", module: "spring-boot-starter-web"

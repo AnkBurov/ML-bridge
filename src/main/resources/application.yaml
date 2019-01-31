@@ -1,2 +1,17 @@
 endpoints:
     sensitive: false
+
+management:
+    security:
+        enabled: false
+
+hystrix:
+    threadpool:
+        default:
+            coreSize: 40
+    command:
+        default:
+            execution:
+                isolation:
+                    thread:
+                        timeoutInMilliseconds: 120000

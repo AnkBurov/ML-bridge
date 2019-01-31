@@ -1,9 +1,7 @@
 package io.ankburov.mlbridge.filter.post
 
-import com.netflix.zuul.ZuulFilter
 import com.netflix.zuul.context.RequestContext
 import io.ankburov.mlbridge.utils.Constants.CORRELATION_ID
-import io.ankburov.mlbridge.utils.Constants.POST
 import io.ankburov.mlbridge.utils.errorRaised
 import io.ankburov.mlbridge.utils.isMethod
 import io.ankburov.mlbridge.utils.loggerFor
@@ -11,8 +9,11 @@ import org.slf4j.MDC
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 
+/**
+ * End business operation
+ */
 @Component
-class EndBusinessOperationFilter : ZuulFilter() {
+class EndBusinessOperationFilter : AbstractPostFilter() {
 
     private val log = loggerFor(javaClass)
 
@@ -29,8 +30,6 @@ class EndBusinessOperationFilter : ZuulFilter() {
             request.isMethod(HttpMethod.POST) && !errorRaised() && this.containsKey("BusinessOperationStarted")
         }
     }
-
-    override fun filterType(): String = POST
 
     override fun filterOrder(): Int = Int.MIN_VALUE + 1
 }
